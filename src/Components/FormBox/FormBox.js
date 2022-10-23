@@ -7,7 +7,8 @@ export default function FormBox() {
     const navigate = useNavigate()
 
     const [disable, setDisable] = useState(false)
-    const [form, setForm] = useState({ link: '', text: ''})
+    const [form, setForm] = useState({ link: '', text: '' })
+    const [buttonText, SetButtonText] = useState('Publish');
     function handleForm(e) {
         setForm({ ...form, [e.target.name]: e.target.value })
     }
@@ -15,20 +16,23 @@ export default function FormBox() {
         e.preventDefault()
         if (disable === true) return
         setDisable(true)
-        
+        SetButtonText("Publishing...");
         const body = {
-            userId : 21,
+            userId: 21,
             link: form.link,
             text: form.text,
         }
         console.log('pre promise')
         const promise = axios.post('http://localhost:4000/timeline', body)
-        promise.then( (res) => { 
-            console.log('then')
-            navigate('/') } )
-        promise.catch( (err) => console.log('Deu Erro logout',err) )
+        promise.then((res) => {
+            SetButtonText("Publish");
+            console.log('then');
+            navigate('/')
+        })
+        promise.catch((err) => alert("Houve um erro ao publicar seu link"))
 
         setTimeout(() => {
+            SetButtonText("Publish");
             console.log('enviou o post', form)
             clearForm()
         })
@@ -47,17 +51,17 @@ export default function FormBox() {
             <ImgWrapper src='https://uploads.jovemnerd.com.br/wp-content/uploads/2021/09/jujutsu-kaisen-0-gojo-nova-imagem.jpg' />
             <Main onSubmit={sendForm}>
                 <Answer> What are you going to share today? </Answer>
-                <LinkInput  type='link' name='link'
-                            placeholder="http..." onChange={handleForm}
-                            value={form.link} disabled={disable} required>
+                <LinkInput type='link' name='link'
+                    placeholder="http..." onChange={handleForm}
+                    value={form.link} disabled={disable} required>
                 </LinkInput >
-                <TextInput  type='text' name='text'
-                            placeholder="manda seu textão" onChange={handleForm}
-                            value={form.text} disabled={disable} required> 
+                <TextInput type='text' name='text'
+                    placeholder="manda seu textão" onChange={handleForm}
+                    value={form.text} disabled={disable} required>
                 </TextInput>
-                <ButtonWrapper type='submit'>
+                <ButtonWrapper type='submit' disabled={disable}>
                     <button >
-                        Publish
+                        {buttonText}
                     </button>
                 </ButtonWrapper>
             </Main>
