@@ -2,7 +2,7 @@ import styled from 'styled-components';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState, useContext } from 'react';
 import userContext from '../../context/userContext';
-import { signIn } from '../../services/api';
+import { signIn } from '../../Services/api';
 
 export default function SignIn(){
 
