@@ -50,7 +50,7 @@ export default function App() {
             }>
                 <BrowserRouter>
                     <Routes>
-                        <Route path="/signin" element={<SignIn />} />
+                        <Route path="/" element={<SignIn />} />
                         <Route path="/signup" element={<SingUp />} />
                         <Route path="/timeLine" element={<TimeLine />} />
                         <Route path="/user/:id" element={<UserPage />} />

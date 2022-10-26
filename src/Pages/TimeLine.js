@@ -3,9 +3,11 @@ import Post from "../Components/Post/Post.js";
 import FormBox from "../Components/FormBox/FormBox.js";
 import Trending from "../Components/Trending/Trending.js";
 import getConfig from "../Services/getConfig.js";
-import { deletePost, getTimeLine } from "../Services/api.js";
+import { getTimeLine } from "../Services/api.js";
 import { useContext, useEffect, useState } from "react";
 import GlobalContext from "../contexts/globalContext.js";
+import { AxiosDeletePost } from "./TimeLineFunctions";
+import InfiniteScroll from "react-infinite-scroll-component"
 import { MdYoutubeSearchedFor } from "react-icons/md";
 
 export default function TimeLine() {
@@ -15,34 +17,20 @@ export default function TimeLine() {
   const token = localStorage.getItem("token");
   const [posts, setPosts] = useState({ array: [], size: 0 });
   const { deleteScreen, setDeleteScreen } = useContext(GlobalContext);
-  const [n, setN] = useState(0);
+  const [nPosts, setNPosts] = useState(3);
 
   useEffect(() => {
     getTimeLine(getConfig(token)).then((res) => {
       setPosts({
-        array: res.data.slice(n, n + 20),
+        array: res.data.slice(nPosts),
         size: res.data.length,
       });
     });
-  }, [reRender]);
+  }, []);
 
-  function nextPage() {
-    if (n + 20 > posts.size) {
-      let add = posts.size - n;
-      if (add > 0) setN(n + add);
-      return;
-    }
-    setN(n + 20);
-    window.scrollTo(0, 0);
-    setReRender(!reRender);
+  function reviewNewPosts(){
+    
   }
-
-    function axiosDeletePost(postId, token) {
-        deletePost(postId, getConfig(token))
-            .then(() => window.location.reload(false))
-            .catch((error) => console.log('error axiosDeletePost', error))
-        setDeleteScreen({postId: '', status: false})
-    }
 
     function DeleteBox(){
         return(
@@ -53,7 +41,7 @@ export default function TimeLine() {
                         <NoGoBack onClick={() => setDeleteScreen({postId: '', status: false})}>
                             <span>No, go back</span>
                         </NoGoBack>
-                        <YesDeleteIt onClick={() => {axiosDeletePost(deleteScreen.postId, token)}}>
+                        <YesDeleteIt onClick={() => {AxiosDeletePost(deleteScreen.postId, token)}}>
                             <span>Yes, delete it</span>
                         </YesDeleteIt>
                     </DeleteOpcions>  
@@ -73,41 +61,10 @@ export default function TimeLine() {
                 <MainContent>
                     <Title> <h1>timeline</h1> </Title>
                     <FormBox />
-                    <NextPage onClick={() => { nextPage() }} >
-                            Carregar mais
-                    </NextPage>
+                    
                 </MainContent>
             </div> ) //CRIAR LOADING
     }
-
-  if (posts.array.length === 0) {
-    return (
-      <div
-        style={{
-          background: "purple",
-          width: "100%",
-          minHeight: "100vh",
-          height: "100%",
-          position: "fixed",
-        }}
-      >
-        <MainContent>
-          <Title>
-            {" "}
-            <h1>timeline</h1>{" "}
-          </Title>
-          <FormBox />
-          <NextPage
-            onClick={() => {
-              nextPage();
-            }}
-          >
-            Carregar mais
-          </NextPage>
-        </MainContent>
-      </div>
-    ); //CRIAR LOADING
-  }
 
   return (
     <Wrapper>
@@ -116,8 +73,9 @@ export default function TimeLine() {
         <Title>
           {" "}
           <h1>timeline</h1>{" "}
-        </Title>
+        </Title>        
         <FormBox />
+        <NewPosts></NewPosts>
         {posts.array.map((value, index) => {
           return (
             <Post
@@ -129,17 +87,9 @@ export default function TimeLine() {
               link={value.link}
               likesQtd={value.likesQtd}
               liked={value.liked}
-              postUserId={value.userId}
-            />
+              postUserId={value.userId} />            
           );
-        })}
-        <NextPage
-          onClick={() => {
-            nextPage();
-          }}
-        >
-          Carregar mais
-        </NextPage>
+        })}      
       </MainContent>
 
       <AsideContent>
@@ -186,7 +136,7 @@ const YesDeleteIt = styled.button`
     font-size: 20px;
     font-weight: 700;
     line-height: 22px;
-    letter-spacing: 0em;
+    letter-spacNewPostsing: 0em;
     text-align: center;
     color: #fff;
   }
@@ -255,19 +205,14 @@ const Title = styled.div`
   }
 `;
 const TrendingWrapper = styled.div`
-  height: 100%;
-  top: 50px;
+    height: 100%;
+    top: 50px;
 `;
-const NextPage = styled.div`
-  width: 200px;
-  height: 70px;
-  margin-top: 20px;
-  margin-bottom: 20px;
-  background-color: black;
-  border-radius: 10px;
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  cursor: pointer;
+const NewPosts = styled.div`
+    width: 611px;
+    height: 61px;
+    background: #1877F2;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border-radius: 16px;
+    margin-bottom: 30px;
 `;
