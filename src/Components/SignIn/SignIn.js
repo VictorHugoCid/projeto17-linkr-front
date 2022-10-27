@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useState, useContext } from 'react';
 import  GlobalContext  from '../../contexts/globalContext';
 import { signIn } from '../../Services/api';
+import SignMob from '../../Styles/SignMob';
 
 export default function SignIn() {
 
@@ -39,23 +40,27 @@ export default function SignIn() {
                     <p>save, share and discover the best links on the web</p>
                 </LogoBox>
             </Web>
-            
-            <Mobile onSubmit={sendForm}>
-                <input
-                    placeholder="e-mail"
-                    type="email"
-                    name="email"
-                    onChange={e => setEmail(e.target.value)}
-                    required></input>
-                <input
-                    placeholder="password"
-                    type="password"
-                    name="password"
-                    onChange={e => setPassword(e.target.value)}
-                    required></input>
-                <Register type="submit">Log In</Register>
-                <Login to="/signup">First time? Create an account!</Login>
-            </Mobile>
+            <MobileStyle>
+                <LogoWeb>
+                    <SignMob />      
+                </LogoWeb>              
+                <Mobile onSubmit={sendForm}>                    
+                    <input
+                        placeholder="e-mail"
+                        type="email"
+                        name="email"
+                        onChange={e => setEmail(e.target.value)}
+                        required></input>
+                    <input
+                        placeholder="password"
+                        type="password"
+                        name="password"
+                        onChange={e => setPassword(e.target.value)}
+                        required></input>
+                    <Register type="submit">Log In</Register>
+                    <Login to="/signup">First time? Create an account!</Login>
+                </Mobile>
+            </MobileStyle>
         </Container>
     )
 };
@@ -72,6 +77,9 @@ const Web = styled.div`
     display: flex;
     align-items: center;
     justify-content: center;
+    @media screen and (max-width: 724px){
+        display: none;
+    }
 `
 const LogoBox = styled.div`
     width: 50%;
@@ -91,10 +99,23 @@ const LogoBox = styled.div`
         color: #FFFFFF;
     }
 `
-const Mobile = styled.form`
+const MobileStyle = styled.div`
     width: 35%;
     height: 100%;
     background-color: #333333;
+    @media (max-width: 724px){
+        width: 100%;
+        height: 100%;
+    }
+    
+`
+const LogoWeb = styled.div`
+    @media (min-width: 724px){
+        display: none;
+    }
+`
+const Mobile = styled.form`
+    margin-top: 150px;
     display: flex;
     align-items: center;
     justify-content: center;

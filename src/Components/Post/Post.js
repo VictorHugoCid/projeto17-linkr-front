@@ -155,7 +155,7 @@ export default function Post(
                     </ImgWrapper>
                     <Main>
                         <Title>
-                            {userId != postUserId ?
+                            {userId !== postUserId ?
                                 (<h1 onClick={() => navigate(`/user/${postUserId}`)} >
                                     {username}
                                 </h1>)
